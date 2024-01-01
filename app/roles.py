@@ -1,9 +1,9 @@
-from enum import Enum
+from enum import StrEnum
 
-from app.permissions.models_permissions import Users, Items
+from app.permissions import Permission
 
 
-class Role(str, Enum):
+class Role(StrEnum):
     ADMINISTRATOR = "ADMINISTRATOR"
     USER = "USER"
 
@@ -18,23 +18,23 @@ class Role(str, Enum):
 ROLE_PERMISSIONS = {
     Role.ADMINISTRATOR: [
         [
-            Users.permissions.CREATE,
-            Users.permissions.READ,
-            Users.permissions.UPDATE,
-            Users.permissions.DELETE
+            Permission.USERS_CREATE,
+            Permission.USERS_READ,
+            Permission.USERS_UPDATE,
+            Permission.USERS_DELETE,
         ],
         [
-            Items.permissions.CREATE,
-            Items.permissions.READ,
-            Items.permissions.UPDATE,
-            Items.permissions.DELETE
+            Permission.ITEMS_CREATE,
+            Permission.ITEMS_READ,
+            Permission.ITEMS_UPDATE,
+            Permission.ITEMS_DELETE,
         ]
     ],
     Role.USER: [
         [
-            Items.permissions.CREATE,
-            Items.permissions.READ,
-            Items.permissions.UPDATE
+            Permission.ITEMS_CREATE,
+            Permission.ITEMS_READ,
+            Permission.ITEMS_UPDATE,
         ]
     ]
 }

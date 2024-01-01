@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta, UTC
-from typing import List
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -11,8 +10,8 @@ from sqlalchemy.orm import Session
 from app.crud.users import get_user
 from app.database import get_db
 from app.models import User
-from app.permissions.base import ModelPermission
-from app.permissions.roles import get_role_permissions
+from app.permissions import Permission
+from app.roles import get_role_permissions
 from app.security import verify_password
 
 
@@ -78,7 +77,7 @@ def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_
 
 
 class PermissionChecker:
-    def __init__(self, permissions_required: List[ModelPermission]):
+    def __init__(self, permissions_required: list[Permission]):
         self.permissions_required = permissions_required
 
     def __call__(self, user: User = Depends(get_current_user)):

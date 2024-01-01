@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, EmailStr, ConfigDict
 
-from app.permissions.roles import Role
+from app.roles import Role
 from app.security import get_password_hash
 
 
