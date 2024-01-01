@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "fastapi-rbac-sample"
+version = "0.1.0"
+description = ""
+authors = ["perforb <dev.perfumed.garden@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.108.0"
+uvicorn = "^0.25.0"
+sqlalchemy = "^2.0.24"
+python-jose = "^3.3.0"
+psycopg2-binary = "^2.9.9"
+email-validator = "^2.1.0.post1"
+bcrypt = "^4.1.2"
+python-multipart = "^0.0.6"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
