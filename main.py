@@ -1,13 +1,33 @@
+from contextlib import asynccontextmanager
+
+import uvicorn
 from fastapi import FastAPI
 
-app = FastAPI()
+from app.database import Base, engine
+from app.routers import users, items
+
+description = """
+Example API to demonstrate restricted routes
+"""
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    Base.metadata.create_all(bind=engine)
+    yield
 
 
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
+app = FastAPI(
+    title='Restricted routes example API',
+    description=description,
+    version="1.0.0",
+    docs_url="/v1/docs",
+    redoc_url=None,
+    lifespan=lifespan
+)
+
+app.include_router(users.router)
+app.include_router(items.router)
+
+if __name__ == '__main__':
+    uvicorn.run(app, host="0.0.0.0", port=8000)
