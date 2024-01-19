@@ -2,8 +2,7 @@ from datetime import datetime, timedelta, UTC
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError
-from jose.jwt import encode, decode
+from jwt import encode, decode, PyJWTError
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
@@ -43,7 +42,7 @@ def get_token_payload(token: str = Depends(oauth2_scheme)):
         if payload_sub is None:
             raise BearAuthException("Token could not be validated")
         return payload_sub
-    except JWTError:
+    except PyJWTError:
         raise BearAuthException("Token could not be validated")
 
 
