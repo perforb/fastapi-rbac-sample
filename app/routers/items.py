@@ -1,7 +1,7 @@
 from fastapi import Depends, APIRouter, HTTPException
 from sqlalchemy.orm import Session
 
-from app.auth import PermissionChecker
+from app.auth import AuthorizationHandler
 from app.crud import items as crud
 from app.database import get_db
 from app.permissions import Permission
@@ -11,7 +11,7 @@ router = APIRouter(prefix="/v1")
 
 
 @router.post("/items",
-             dependencies=[Depends(PermissionChecker([Permission.ITEMS_CREATE]))],
+             dependencies=[Depends(AuthorizationHandler([Permission.ITEMS_CREATE]))],
              response_model=Item, summary="Create a new item",
              tags=["Items"])
 def create_item(item: ItemIn, db: Session = Depends(get_db)):
@@ -27,7 +27,7 @@ def create_item(item: ItemIn, db: Session = Depends(get_db)):
 
 
 @router.get("/items",
-            dependencies=[Depends(PermissionChecker([Permission.ITEMS_READ]))],
+            dependencies=[Depends(AuthorizationHandler([Permission.ITEMS_READ]))],
             response_model=list[Item], summary="Get all items",
             tags=["Items"])
 def get_items(db: Session = Depends(get_db)):
@@ -43,7 +43,7 @@ def get_items(db: Session = Depends(get_db)):
 
 
 @router.patch("/items/{item_id}",
-              dependencies=[Depends(PermissionChecker([Permission.ITEMS_READ, Permission.ITEMS_UPDATE]))],
+              dependencies=[Depends(AuthorizationHandler([Permission.ITEMS_READ, Permission.ITEMS_UPDATE]))],
               response_model=Item,
               summary="Update an item", tags=["Items"])
 def update_operating_spot(item_id: int, item_update: ItemUpdate,
@@ -63,7 +63,7 @@ def update_operating_spot(item_id: int, item_update: ItemUpdate,
 
 
 @router.delete("/items/{item_id}",
-               dependencies=[Depends(PermissionChecker([Permission.ITEMS_DELETE]))],
+               dependencies=[Depends(AuthorizationHandler([Permission.ITEMS_DELETE]))],
                summary="Delete an item", tags=["Items"])
 def delete_item(item_id: int, db: Session = Depends(get_db)):
     """

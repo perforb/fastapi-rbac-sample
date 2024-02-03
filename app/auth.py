@@ -75,7 +75,7 @@ def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_
     return user
 
 
-class PermissionChecker:
+class AuthorizationHandler:
     def __init__(self, permissions_required: list[Permission]):
         self.permissions_required = permissions_required
 

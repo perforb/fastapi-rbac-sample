@@ -2,7 +2,7 @@ from fastapi import Depends, APIRouter, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
-from app.auth import PermissionChecker, create_access_token, authenticate_user
+from app.auth import AuthorizationHandler, create_access_token, authenticate_user
 from app.crud import users as crud
 from app.database import get_db
 from app.permissions import Permission
@@ -34,7 +34,7 @@ def authorize(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = De
 
 
 @router.post("/users",
-             dependencies=[Depends(PermissionChecker([Permission.USERS_CREATE]))],
+             dependencies=[Depends(AuthorizationHandler([Permission.USERS_CREATE]))],
              response_model=User, summary="Register a user", tags=["Users"])
 def create_user(user_signup: UserSignUp, db: Session = Depends(get_db)):
     """
@@ -51,7 +51,7 @@ def create_user(user_signup: UserSignUp, db: Session = Depends(get_db)):
 
 
 @router.get("/users",
-            dependencies=[Depends(PermissionChecker([Permission.USERS_READ]))],
+            dependencies=[Depends(AuthorizationHandler([Permission.USERS_READ]))],
             response_model=list[User], summary="Get all users", tags=["Users"])
 def get_users(db: Session = Depends(get_db)):
     """
@@ -66,7 +66,7 @@ def get_users(db: Session = Depends(get_db)):
 
 
 @router.patch("/users",
-              dependencies=[Depends(PermissionChecker([Permission.USERS_CREATE, Permission.USERS_UPDATE]))],
+              dependencies=[Depends(AuthorizationHandler([Permission.USERS_CREATE, Permission.USERS_UPDATE]))],
               response_model=User,
               summary="Update a user", tags=["Users"])
 def update_user(user_email: str, user_update: UserUpdate, db: Session = Depends(get_db)):
@@ -85,7 +85,7 @@ def update_user(user_email: str, user_update: UserUpdate, db: Session = Depends(
 
 
 @router.delete("/users",
-               dependencies=[Depends(PermissionChecker([Permission.USERS_DELETE]))],
+               dependencies=[Depends(AuthorizationHandler([Permission.USERS_DELETE]))],
                summary="Delete a user", tags=["Users"])
 def delete_user(user_email: str, db: Session = Depends(get_db)):
     """
